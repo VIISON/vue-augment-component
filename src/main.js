@@ -2,14 +2,17 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import App from './App';
-import router from './router';
+import GlobalAugment from './plugins/GlobalAugment';
+import viisonAppExtension from './extensions/ViisonAppExtension';
+
+Vue.use(GlobalAugment);
+viisonAppExtension();
 
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  router,
   template: '<App/>',
   components: { App },
 });
