@@ -69,7 +69,6 @@ const GlobalAugment = {
 
     const oldRender = Vue.prototype._render;
     Vue.prototype._render = function newRender() {
-      const args = arguments;
       let resultingVdom = oldRender.apply(this, arguments);
 
       augment(resultingVdom);
