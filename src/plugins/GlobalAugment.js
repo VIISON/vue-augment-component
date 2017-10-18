@@ -77,7 +77,7 @@ const GlobalAugment = {
       return resultingVdom;
     };
 
-  }
+  },
 };
 
 export default GlobalAugment;
