@@ -2,7 +2,11 @@ import Vue from 'vue';
 import ViisonEcosystem from '../components/ViisonEcosystem';
 
 export default () => {
-  Vue.augment('HelloWorld').insertAfter(2, ViisonEcosystem);
+  Vue.insertComponentAfter(ViisonEcosystem, 'HelloWorld > Ecosystem');
+  Vue.insertComponentBefore(ViisonEcosystem, 'HelloWorld > Ecosystem');
+  Vue.appendChildComponentTo(ViisonEcosystem, 'HelloWorld');
+  Vue.prependChildComponentTo(ViisonEcosystem, 'HelloWorld');
+
 };
 
 // Proposed async extension syntax
