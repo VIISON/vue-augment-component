@@ -1,5 +1,8 @@
 import Sizzle from 'sizzle';
 
+import VnodeDomInterfaceMixin from './VnodeDomInterfaceMixin';
+import VdomAugmentors from './VdomAugmentors';
+
 const augmentationsBySelector = {};
 
 function recordAugmentation(component, selector, type) {
@@ -15,23 +18,9 @@ function recordAugmentation(component, selector, type) {
   });
 }
 
-const AUGMENTORS = {
-  insertAfter: (vnode, component) => {
-    // debugger;
-    // vdom.children.splice(childNodeIndex + 1, 0, parent.$createElement(augmentationComponent));
-    // childNodeIndex += 1;
-  },
-  insertBefore: () => {
-  },
-  prependTo: () => {
-  },
-  appendTo: () => {
-  },
-};
-
 function performAugmentation(vnode, augmentations) {
   augmentations.forEach((augmentation) => {
-    AUGMENTORS[augmentation.type](vnode, augmentation.component);
+    VdomAugmentors[augmentation.type](vnode, augmentation.component);
     console.log('augmenting ', vnode.tagName, ' with ', augmentation);
   });
 }
@@ -59,62 +48,7 @@ const GlobalAugment = {
     // Vue uses dangling underscores internally, so we have no choice here either
     /* eslint-disable no-underscore-dangle */
 
-    Vue.mixin({
-      beforeCreate() {
-        // Check whether the VNode is already patched
-        const VNode = Vue.prototype._e('').constructor;
-        if (Object.prototype.hasOwnProperty.call(VNode.prototype, 'nodeType')) {
-          return;
-        }
-
-        // Apply patch
-        Object.defineProperty(VNode.prototype, 'nodeType', {
-          get: function nodeType() {
-            return 1;
-          },
-        });
-        Object.defineProperty(VNode.prototype, 'nodeName', {
-          get: function nodeName() {
-            if (this.componentOptions) {
-              return this.componentOptions.tag.toLowerCase();
-            } else if (this.tag) {
-              return this.tag.toLowerCase();
-            }
-            return undefined;
-          },
-        });
-        Object.defineProperty(VNode.prototype, 'parentNode', {
-          get: function parentNode() {
-            return this.parent;
-          },
-        });
-        Object.defineProperty(VNode.prototype, 'childNodes', {
-          get: function childNodes() {
-            return this.children || [];
-          },
-        });
-        VNode.prototype.getElementById = function getElementById(id) {
-          if (this.data && this.data.attr) {
-            return this.data.attr.id;
-          }
-          return undefined;
-        };
-        VNode.prototype.getElementsByTagName = function getElementsByTagName(tagName) {
-          const lcTagName = tagName.toLowerCase();
-          const matchingElements = [];
-          this.childNodes.forEach((child) => {
-            if (child.nodeName === lcTagName) {
-              matchingElements.push(child);
-            }
-            child.getElementsByTagName(tagName).forEach((result) => {
-              matchingElements.push(result);
-            });
-          });
-
-          return matchingElements;
-        };
-      },
-    });
+    Vue.mixin(VnodeDomInterfaceMixin);
 
     Vue.insertComponentBefore = (component, selector) => {
       recordAugmentation(component, selector, 'insertBefore');
@@ -136,7 +70,7 @@ const GlobalAugment = {
     Vue.prototype._render = function newRender(...args) {
       const resultingVdom = oldRender.apply(this, args);
 
-      augment(resultingVdom);
+      augment(this, resultingVdom);
 
       return resultingVdom;
     };
