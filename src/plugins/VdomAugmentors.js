@@ -58,7 +58,6 @@ const VdomAugmentors = {
     }
     const element = createElement(matchedComponent, wrappingComponent, {}, [selectedSizzleNode.vnode]);
     spliceIntoParent(selectedSizzleNode, element, 0, 1);
-    element.children = element.componentOptions.children;
   },
 };
 
