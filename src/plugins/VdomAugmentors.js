@@ -12,6 +12,8 @@ function spliceIntoParent(vnode, element, indexDelta, removeCount) {
   const parentVnode = vnode.parentVnode;
   const selectedVnodeIndex = parentVnode.children.indexOf(vnode);
   parentVnode.children.splice(selectedVnodeIndex + indexDelta, removeCount, element);
+  /* eslint-disable no-param-reassign */
+  element.parentVnode = vnode.parentVnode;
 }
 
 const VdomAugmentors = {
@@ -22,7 +24,6 @@ const VdomAugmentors = {
     }
     const element = createElement(matchedComponent, componentToInsert);
     spliceIntoParent(selectedVnodes[0], element, 0, 0);
-    element.parentVnode = selectedVnodes[0].parentVnode;
   },
 
   insertAfter: (matchedComponent, vnode, subSelector, componentToInsert) => {
@@ -32,7 +33,6 @@ const VdomAugmentors = {
     }
     const element = createElement(matchedComponent, componentToInsert);
     spliceIntoParent(selectedVnodes[0], element, 1, 0);
-    element.parentVnode = selectedVnodes[0].parentVnode;
   },
 
   prependChildComponent: (matchedComponent, vnode, componentToPrepend) => {
@@ -52,7 +52,6 @@ const VdomAugmentors = {
     }
     const element = createElement(matchedComponent, wrappingComponent, {}, [selectedVnodes[0]]);
     spliceIntoParent(selectedVnodes[0], element, 0, 1);
-    element.parentVnode = selectedVnodes[0].parentVnode;
     element.children = element.componentOptions.children;
     selectedVnodes[0].parentVnode = element;
   },
