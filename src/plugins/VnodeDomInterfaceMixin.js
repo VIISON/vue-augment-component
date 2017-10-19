@@ -1,6 +1,7 @@
 const VnodeDomInterfaceMixin = Vue => ({
   beforeCreate() {
     // Check whether the VNode is already patched
+    /* eslint-disable no-underscore-dangle */
     const VNode = Vue.prototype._e('').constructor;
     if (Object.prototype.hasOwnProperty.call(VNode.prototype, 'nodeType')) {
       return;

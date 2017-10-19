@@ -13,6 +13,17 @@ function setParents(vnode, parent) {
   }
 }
 
+function clearParents(vnode) {
+  /* eslint-disable no-param-reassign */
+  vnode.parentVnode = null;
+
+  if (vnode.children) {
+    for (let i = 0; i < vnode.children.length; i += 1) {
+      clearParents(vnode.children[i]);
+    }
+  }
+}
+
 export default class ComponentAugmentation {
   constructor(selector) {
     this.selectorPath = selector.split(/\s+/).reverse();
@@ -56,6 +67,14 @@ export default class ComponentAugmentation {
     );
   }
 
+  wrapComponentAround(component, subSelector) {
+    this.vnodesNeedParents = true;
+    this.augmentations.push(
+      (matchedComponent, vnode) =>
+        VdomAugmentors.wrap(matchedComponent, vnode, subSelector, component),
+    );
+  }
+
   augment(component, vnode) {
     if (this.vnodesNeedParents) {
       setParents(vnode, null);
@@ -65,7 +84,9 @@ export default class ComponentAugmentation {
       this.augmentations[i](component, vnode);
     }
 
-    // TODO clear parents
+    if (this.vnodesNeedParents) {
+      clearParents(vnode);
+    }
   }
 
   static create(selector) {
