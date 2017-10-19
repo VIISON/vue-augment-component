@@ -56,6 +56,14 @@ export default class ComponentAugmentation {
     );
   }
 
+  wrapComponentAround(component, subSelector) {
+    this.vnodesNeedParents = true;
+    this.augmentations.push(
+      (matchedComponent, vnode) =>
+        VdomAugmentors.wrap(matchedComponent, vnode, subSelector, component),
+    );
+  }
+
   augment(component, vnode) {
     if (this.vnodesNeedParents) {
       setParents(vnode, null);
