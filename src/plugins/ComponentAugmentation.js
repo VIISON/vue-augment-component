@@ -1,16 +1,14 @@
 import Sizzle from 'sizzle';
 import VdomAugmentors from './VdomAugmentors';
+import componentMatchesSelector from './componentMatchesSelector';
 
 const componentSelectors = {};
 
 export default class ComponentAugmentation {
   constructor(selector) {
-    this.selectorPath = selector.split(/\s+/).reverse();
-    if (this.selectorPath.length < 1) {
+    this.reverseSelectorPath = selector.split(/\s+/).reverse();
+    if (this.reverseSelectorPath.length < 1) {
       throw new Error('Component selector path is empty.');
-    }
-    if (this.selectorPath.length > 1) {
-      throw new Error('Complex selectors are not yet supported.');
     }
 
     this.augmentations = [];
@@ -63,8 +61,8 @@ export default class ComponentAugmentation {
   static create(selector) {
     const componentAugmentation = new ComponentAugmentation(selector);
 
-    const selectorPath = componentAugmentation.selectorPath;
-    const augmentedLeafComponent = selectorPath[selectorPath.length - 1];
+    const selectorPath = componentAugmentation.reverseSelectorPath;
+    const augmentedLeafComponent = selectorPath[0];
     let leafComponentAugmentations = componentSelectors[augmentedLeafComponent];
     if (!leafComponentAugmentations) {
       leafComponentAugmentations = [];
@@ -76,17 +74,18 @@ export default class ComponentAugmentation {
     return componentAugmentation;
   }
 
-  static render(parentComponent, vnode) {
-    const { _componentTag: componentTag } = parentComponent.$options || {};
+  static render(component, vnode) {
+    const { _componentTag: componentTag } = component.$options || {};
 
-    // TODO support selectors with length > 1
     const componentAugmentations = componentSelectors[componentTag];
     if (!componentAugmentations) {
       return vnode;
     }
 
     for (let i = 0; i < componentAugmentations.length; i += 1) {
-      componentAugmentations[i].augment(parentComponent, vnode);
+      if (componentMatchesSelector(component, componentAugmentations[i].reverseSelectorPath)) {
+        componentAugmentations[i].augment(component, vnode);
+      }
     }
 
     return vnode;
