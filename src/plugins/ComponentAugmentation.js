@@ -1,3 +1,4 @@
+import Sizzle from 'sizzle';
 import VdomAugmentors from './VdomAugmentors';
 
 const componentSelectors = {};
@@ -16,16 +17,18 @@ export default class ComponentAugmentation {
   }
 
   insertComponentBefore(component, subSelector) {
+    const compiledSubSelector = Sizzle.compile(subSelector);
     this.augmentations.push(
       (matchedComponent, vnode) =>
-        VdomAugmentors.insertBefore(matchedComponent, vnode, subSelector, component),
+        VdomAugmentors.insertBefore(matchedComponent, vnode, compiledSubSelector, component),
     );
   }
 
   insertComponentAfter(component, subSelector) {
+    const compiledSubSelector = Sizzle.compile(subSelector);
     this.augmentations.push(
       (matchedComponent, vnode) =>
-        VdomAugmentors.insertAfter(matchedComponent, vnode, subSelector, component),
+        VdomAugmentors.insertAfter(matchedComponent, vnode, compiledSubSelector, component),
     );
   }
 
@@ -44,9 +47,10 @@ export default class ComponentAugmentation {
   }
 
   wrapComponentAround(component, subSelector) {
+    const compiledSubSelector = Sizzle.compile(subSelector);
     this.augmentations.push(
       (matchedComponent, vnode) =>
-        VdomAugmentors.wrap(matchedComponent, vnode, subSelector, component),
+        VdomAugmentors.wrap(matchedComponent, vnode, compiledSubSelector, component),
     );
   }
 
