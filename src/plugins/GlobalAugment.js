@@ -48,7 +48,7 @@ const GlobalAugment = {
     // Vue uses dangling underscores internally, so we have no choice here either
     /* eslint-disable no-underscore-dangle */
 
-    Vue.mixin(VnodeDomInterfaceMixin);
+    Vue.mixin(VnodeDomInterfaceMixin(Vue));
 
     Vue.insertComponentBefore = (component, selector) => {
       recordAugmentation(component, selector, 'insertBefore');

@@ -1,4 +1,4 @@
-const VnodeDomInterfaceMixin = {
+const VnodeDomInterfaceMixin = Vue => ({
   beforeCreate() {
     // Check whether the VNode is already patched
     const VNode = Vue.prototype._e('').constructor;
@@ -53,6 +53,6 @@ const VnodeDomInterfaceMixin = {
       return matchingElements;
     };
   },
-};
+});
 
 export default VnodeDomInterfaceMixin;
