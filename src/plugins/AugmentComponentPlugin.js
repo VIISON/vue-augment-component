@@ -5,9 +5,6 @@ const AugmentComponentPlugin = {
     // Disable no-param-reassign since we need to patch the Vue we get passed as an argument
     /* eslint-disable no-param-reassign */
 
-    // Vue uses dangling underscores internally, so we have no choice here either
-    /* eslint-disable no-underscore-dangle */
-
     Vue.augmentComponent = selector => ComponentAugmentation.create(selector);
 
     const oldRender = Vue.prototype._render;
