@@ -2,10 +2,10 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import App from './App';
-import GlobalAugment from './plugins/GlobalAugment';
+import AugmentComponentPlugin from './plugins/AugmentComponentPlugin';
 import viisonAppExtension from './extensions/ViisonAppExtension';
 
-Vue.use(GlobalAugment);
+Vue.use(AugmentComponentPlugin);
 viisonAppExtension();
 
 Vue.config.productionTip = false;
