@@ -1,4 +1,3 @@
-import VnodeDomInterfaceMixin from './VnodeDomInterfaceMixin';
 import ComponentAugmentation from './ComponentAugmentation';
 
 const AugmentComponentPlugin = {
@@ -8,8 +7,6 @@ const AugmentComponentPlugin = {
 
     // Vue uses dangling underscores internally, so we have no choice here either
     /* eslint-disable no-underscore-dangle */
-
-    Vue.mixin(VnodeDomInterfaceMixin(Vue));
 
     Vue.augmentComponent = selector => ComponentAugmentation.create(selector);
 

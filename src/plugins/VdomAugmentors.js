@@ -1,4 +1,5 @@
 import Sizzle from 'sizzle';
+import SizzleNode from './SizzleNode';
 
 function createElement(matchedComponent, componentToPrepend, options, children) {
   const element = matchedComponent.$createElement(componentToPrepend, options, children);
@@ -8,31 +9,36 @@ function createElement(matchedComponent, componentToPrepend, options, children) 
   return element;
 }
 
-function spliceIntoParent(vnode, element, indexDelta, removeCount) {
-  const parentVnode = vnode.parentVnode;
-  const selectedVnodeIndex = parentVnode.children.indexOf(vnode);
+function spliceIntoParent(sizzleNode, element, indexDelta, removeCount) {
+  const parentVnode = sizzleNode.parentNode.vnode;
+  const selectedVnodeIndex = parentVnode.children.indexOf(sizzleNode.vnode);
   parentVnode.children.splice(selectedVnodeIndex + indexDelta, removeCount, element);
-  /* eslint-disable no-param-reassign */
-  element.parentVnode = vnode.parentVnode;
+}
+
+function sizzleSelect(selector, rootVNode) {
+  const root = new SizzleNode(rootVNode, undefined);
+  const selectedNodes = Sizzle.select(selector, root);
+
+  return (selectedNodes.length > 0) ? selectedNodes[0] : undefined;
 }
 
 const VdomAugmentors = {
   insertBefore: (matchedComponent, vnode, subSelector, componentToInsert) => {
-    const selectedVnodes = Sizzle.select(subSelector, vnode);
-    if (selectedVnodes.length < 1) {
+    const selectedSizzleNode = sizzleSelect(subSelector, vnode);
+    if (!selectedSizzleNode) {
       return;
     }
     const element = createElement(matchedComponent, componentToInsert);
-    spliceIntoParent(selectedVnodes[0], element, 0, 0);
+    spliceIntoParent(selectedSizzleNode, element, 0, 0);
   },
 
   insertAfter: (matchedComponent, vnode, subSelector, componentToInsert) => {
-    const selectedVnodes = Sizzle.select(subSelector, vnode);
-    if (selectedVnodes.length < 1) {
+    const selectedSizzleNode = sizzleSelect(subSelector, vnode);
+    if (!selectedSizzleNode) {
       return;
     }
     const element = createElement(matchedComponent, componentToInsert);
-    spliceIntoParent(selectedVnodes[0], element, 1, 0);
+    spliceIntoParent(selectedSizzleNode, element, 1, 0);
   },
 
   prependChildComponent: (matchedComponent, vnode, componentToPrepend) => {
@@ -46,14 +52,13 @@ const VdomAugmentors = {
   },
 
   wrap: (matchedComponent, vnode, subSelector, wrappingComponent) => {
-    const selectedVnodes = Sizzle.select(subSelector, vnode);
-    if (selectedVnodes.length < 1) {
+    const selectedSizzleNode = sizzleSelect(subSelector, vnode);
+    if (!selectedSizzleNode) {
       return;
     }
-    const element = createElement(matchedComponent, wrappingComponent, {}, [selectedVnodes[0]]);
-    spliceIntoParent(selectedVnodes[0], element, 0, 1);
+    const element = createElement(matchedComponent, wrappingComponent, {}, [selectedSizzleNode.vnode]);
+    spliceIntoParent(selectedSizzleNode, element, 0, 1);
     element.children = element.componentOptions.children;
-    selectedVnodes[0].parentVnode = element;
   },
 };
 

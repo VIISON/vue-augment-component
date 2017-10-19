@@ -2,28 +2,6 @@ import VdomAugmentors from './VdomAugmentors';
 
 const componentSelectors = {};
 
-function setParents(vnode, parent) {
-  /* eslint-disable no-param-reassign */
-  vnode.parentVnode = parent;
-
-  if (vnode.children) {
-    for (let i = 0; i < vnode.children.length; i += 1) {
-      setParents(vnode.children[i], vnode);
-    }
-  }
-}
-
-function clearParents(vnode) {
-  /* eslint-disable no-param-reassign */
-  vnode.parentVnode = null;
-
-  if (vnode.children) {
-    for (let i = 0; i < vnode.children.length; i += 1) {
-      clearParents(vnode.children[i]);
-    }
-  }
-}
-
 export default class ComponentAugmentation {
   constructor(selector) {
     this.selectorPath = selector.split(/\s+/).reverse();
@@ -38,7 +16,6 @@ export default class ComponentAugmentation {
   }
 
   insertComponentBefore(component, subSelector) {
-    this.vnodesNeedParents = true;
     this.augmentations.push(
       (matchedComponent, vnode) =>
         VdomAugmentors.insertBefore(matchedComponent, vnode, subSelector, component),
@@ -46,7 +23,6 @@ export default class ComponentAugmentation {
   }
 
   insertComponentAfter(component, subSelector) {
-    this.vnodesNeedParents = true;
     this.augmentations.push(
       (matchedComponent, vnode) =>
         VdomAugmentors.insertAfter(matchedComponent, vnode, subSelector, component),
@@ -68,7 +44,6 @@ export default class ComponentAugmentation {
   }
 
   wrapComponentAround(component, subSelector) {
-    this.vnodesNeedParents = true;
     this.augmentations.push(
       (matchedComponent, vnode) =>
         VdomAugmentors.wrap(matchedComponent, vnode, subSelector, component),
@@ -76,16 +51,8 @@ export default class ComponentAugmentation {
   }
 
   augment(component, vnode) {
-    if (this.vnodesNeedParents) {
-      setParents(vnode, null);
-    }
-
     for (let i = 0; i < this.augmentations.length; i += 1) {
       this.augmentations[i](component, vnode);
-    }
-
-    if (this.vnodesNeedParents) {
-      clearParents(vnode);
     }
   }
 
