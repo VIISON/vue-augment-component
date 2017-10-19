@@ -1,6 +1,4 @@
-function getComponentTag(currentComponent) {
-  return currentComponent && currentComponent.$options && currentComponent.$options._componentTag;
-}
+import getComponentTag from './getComponentTag';
 
 /**
  * @param {Vue} component
