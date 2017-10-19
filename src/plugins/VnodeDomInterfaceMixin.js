@@ -32,10 +32,35 @@ const VnodeDomInterfaceMixin = Vue => ({
         return this.children || [];
       },
     });
-    VNode.prototype.getElementById = function getElementById(id) {
-      if (this.data && this.data.attr) {
-        return this.data.attr.id === id;
+    VNode.prototype.getAttribute = function getAttribute(attributeName) {
+      if (!this.data) {
+        return undefined;
       }
+
+      if (attributeName === 'class') {
+        return this.data.staticClass;
+      }
+
+      if (this.data.attrs && this.data.attrs[attributeName]) {
+        return String(this.data.attrs[attributeName]);
+      }
+
+      return undefined;
+    };
+    VNode.prototype.getElementById = function getElementById(id) {
+      if (this.data && this.data.attrs && this.data.attrs.id === id) {
+        return this;
+      }
+      if (!this.children) {
+        return undefined;
+      }
+      for (let i = 0; i < this.children.length; i += 1) {
+        const result = this.children[i].getElementById(id);
+        if (result) {
+          return result;
+        }
+      }
+
       return undefined;
     };
     VNode.prototype.getElementsByTagName = function getElementsByTagName(tagName) {
