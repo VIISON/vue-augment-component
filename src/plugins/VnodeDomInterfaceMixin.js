@@ -34,7 +34,7 @@ const VnodeDomInterfaceMixin = {
     });
     VNode.prototype.getElementById = function getElementById(id) {
       if (this.data && this.data.attr) {
-        return this.data.attr.id;
+        return this.data.attr.id === id;
       }
       return undefined;
     };
