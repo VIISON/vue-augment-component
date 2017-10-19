@@ -1,6 +1,6 @@
 import ComponentAugmentation from './ComponentAugmentation';
 
-const AugmentComponentPlugin = {
+const VueAugmentComponentPlugin = {
   install(Vue) {
     // Disable no-param-reassign since we need to patch the Vue we get passed as an argument
     /* eslint-disable no-param-reassign */
@@ -16,4 +16,4 @@ const AugmentComponentPlugin = {
   },
 };
 
-export default AugmentComponentPlugin;
+export default VueAugmentComponentPlugin;
