@@ -1,25 +1,20 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <EssentialLinks />
-    <Ecosystem />
+  <div class="component">
+    <h2>Outer Component</h2>
+    <ComponentA />
+    <ComponentB />
   </div>
 </template>
 
 <script>
-import EssentialLinks from './EssentialLinks';
-import Ecosystem from './Ecosystem';
+import ComponentA from './ComponentA';
+import ComponentB from './ComponentB';
 
 export default {
-  name: 'HelloWorld',
+  name: 'OuterComponent',
   components: {
-    EssentialLinks,
-    Ecosystem,
-  },
-  data() {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-    };
+    ComponentA,
+    ComponentB,
   },
 };
 </script>

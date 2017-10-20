@@ -1,10 +1,9 @@
 <template>
-  <div class="outer-container">
-    <h2>Viison Wrapper</h2>
+  <div class="extension outer-container">
+    <h2>Wrapper Extension</h2>
     <div class="inner-container">
       <slot></slot>
     </div>
-    <span>-- End of wrapper --</span>
   </div>
 </template>
 

@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <img src="assets/logo.png">
-    <HelloWorld />
+    <h2>Outer app component</h2>
+    <OuterComponent />
   </div>
 </template>
 
 <script>
-  import HelloWorld from './components/HelloWorld';
+  import OuterComponent from './components/OuterComponent';
 
   export default {
     name: 'app',
     components: {
-      HelloWorld,
+      OuterComponent,
     },
   };
 </script>
@@ -24,5 +24,17 @@
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.component {
+  border: 1px solid #77cc77;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.extension {
+  border: 1px solid #eeaa77;
+  padding: 10px;
+  margin: 10px 0;
 }
 </style>
