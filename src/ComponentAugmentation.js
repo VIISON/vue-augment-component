@@ -21,6 +21,8 @@ export default class ComponentAugmentation {
       (matchedComponent, vnode) =>
         VdomAugmentors.insertBefore(matchedComponent, vnode, compiledSubSelector, component),
     );
+
+    return this;
   }
 
   insertComponentAfter(component, subSelector) {
@@ -29,6 +31,8 @@ export default class ComponentAugmentation {
       (matchedComponent, vnode) =>
         VdomAugmentors.insertAfter(matchedComponent, vnode, compiledSubSelector, component),
     );
+
+    return this;
   }
 
   prependChildComponent(component) {
@@ -36,6 +40,8 @@ export default class ComponentAugmentation {
       (matchedComponent, vnode) =>
         VdomAugmentors.prependChildComponent(matchedComponent, vnode, component),
     );
+
+    return this;
   }
 
   appendChildComponent(component) {
@@ -43,6 +49,8 @@ export default class ComponentAugmentation {
       (matchedComponent, vnode) =>
         VdomAugmentors.appendChildComponent(matchedComponent, vnode, component),
     );
+
+    return this;
   }
 
   wrapComponentAround(component, subSelector) {
@@ -51,6 +59,8 @@ export default class ComponentAugmentation {
       (matchedComponent, vnode) =>
         VdomAugmentors.wrap(matchedComponent, vnode, compiledSubSelector, component),
     );
+
+    return this;
   }
 
   augment(component, vnode) {
