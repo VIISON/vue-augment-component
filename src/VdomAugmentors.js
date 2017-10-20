@@ -10,9 +10,9 @@ function createElement(matchedComponent, componentToPrepend, options, children) 
 }
 
 function spliceIntoParent(sizzleNode, element, indexDelta, removeCount) {
-  const parentVnode = sizzleNode.parentNode.vnode;
-  const selectedVnodeIndex = parentVnode.children.indexOf(sizzleNode.vnode);
-  parentVnode.children.splice(selectedVnodeIndex + indexDelta, removeCount, element);
+  const siblingVNodes = SizzleNode.getVNodeChildren(sizzleNode.parentNode.vnode);
+  const selectedVnodeIndex = siblingVNodes.indexOf(sizzleNode.vnode);
+  siblingVNodes.splice(selectedVnodeIndex + indexDelta, removeCount, element);
 }
 
 function sizzleSelect(selector, rootVNode) {
@@ -43,12 +43,14 @@ const VdomAugmentors = {
 
   prependChildComponent: (matchedComponent, vnode, componentToPrepend) => {
     const element = createElement(matchedComponent, componentToPrepend);
-    vnode.children.splice(0, 0, element);
+    const siblingVNodes = SizzleNode.getVNodeChildren(vnode);
+    siblingVNodes.splice(0, 0, element);
   },
 
   appendChildComponent: (matchedComponent, vnode, componentToAppend) => {
     const element = createElement(matchedComponent, componentToAppend);
-    vnode.children.splice(vnode.children.length, 0, element);
+    const siblingVNodes = SizzleNode.getVNodeChildren(vnode);
+    siblingVNodes.splice(siblingVNodes.length, 0, element);
   },
 
   wrap: (matchedComponent, vnode, subSelector, wrappingComponent) => {

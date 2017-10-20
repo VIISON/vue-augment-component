@@ -1,5 +1,6 @@
 import Sizzle from 'sizzle';
 import VdomAugmentors from './VdomAugmentors';
+import getComponentTag from './getComponentTag';
 import componentMatchesSelector from './componentMatchesSelector';
 
 const componentSelectors = {};
@@ -75,8 +76,7 @@ export default class ComponentAugmentation {
   }
 
   static render(component, vnode) {
-    const { _componentTag: componentTag } = component.$options || {};
-
+    const componentTag = getComponentTag(component);
     const componentAugmentations = componentSelectors[componentTag];
     if (!componentAugmentations) {
       return vnode;
