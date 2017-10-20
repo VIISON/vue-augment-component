@@ -9,7 +9,7 @@
   import OuterComponent from './components/OuterComponent';
 
   export default {
-    name: 'app',
+    name: 'App',
     components: {
       OuterComponent,
     },

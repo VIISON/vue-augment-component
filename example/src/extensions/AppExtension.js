@@ -9,4 +9,6 @@ export default () => {
     .prependChildComponent(ExtensionA)
     .appendChildComponent(ExtensionA)
     .wrapComponentAround(WrapperExtension, 'ComponentA');
+
+  Vue.augmentComponent('App > OuterComponent > ComponentA').appendChildComponent(ExtensionA)
 };
