@@ -45,9 +45,10 @@ export default class SizzleNode {
     if (typeof this.lazyChildNodes === 'undefined') {
       // Lazily create child nodes
       this.lazyChildNodes = [];
-      if (this.vnode.children) {
-        for (let i = 0; i < this.vnode.children.length; i += 1) {
-          this.childNodes.push(new SizzleNode(this.vnode.children[i], this));
+      const children = SizzleNode.getVNodeChildren(this.vnode);
+      if (children) {
+        for (let i = 0; i < children.length; i += 1) {
+          this.childNodes.push(new SizzleNode(children[i], this));
         }
       }
     }
@@ -109,5 +110,13 @@ export default class SizzleNode {
     }
 
     return matchingElements;
+  }
+
+  /**
+   * @param {VNode}
+   * @returns {VNode[]}
+   */
+  static getVNodeChildren(vnode) {
+    return (vnode.componentOptions) ? vnode.componentOptions.children : vnode.children;
   }
 }
