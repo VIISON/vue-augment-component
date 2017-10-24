@@ -19,26 +19,24 @@ function sizzleSelect(selector, rootVNode) {
   const root = new SizzleNode(rootVNode, undefined);
   const selectedNodes = Sizzle.select(selector, root);
 
-  return (selectedNodes.length > 0) ? selectedNodes[0] : undefined;
+  return selectedNodes;
 }
 
 const VdomAugmentors = {
   insertBefore: (matchedComponent, vnode, subSelector, componentToInsert) => {
-    const selectedSizzleNode = sizzleSelect(subSelector, vnode);
-    if (!selectedSizzleNode) {
-      return;
+    const selectedSizzleNodes = sizzleSelect(subSelector, vnode);
+    for (let i = 0; i < selectedSizzleNodes.length; i += 1) {
+      const element = createElement(matchedComponent, componentToInsert);
+      spliceIntoParent(selectedSizzleNodes[i], element, 0, 0);
     }
-    const element = createElement(matchedComponent, componentToInsert);
-    spliceIntoParent(selectedSizzleNode, element, 0, 0);
   },
 
   insertAfter: (matchedComponent, vnode, subSelector, componentToInsert) => {
-    const selectedSizzleNode = sizzleSelect(subSelector, vnode);
-    if (!selectedSizzleNode) {
-      return;
+    const selectedSizzleNodes = sizzleSelect(subSelector, vnode);
+    for (let i = 0; i < selectedSizzleNodes.length; i += 1) {
+      const element = createElement(matchedComponent, componentToInsert);
+      spliceIntoParent(selectedSizzleNodes[i], element, 1, 0);
     }
-    const element = createElement(matchedComponent, componentToInsert);
-    spliceIntoParent(selectedSizzleNode, element, 1, 0);
   },
 
   prependChildComponent: (matchedComponent, vnode, componentToPrepend) => {
@@ -54,12 +52,11 @@ const VdomAugmentors = {
   },
 
   wrap: (matchedComponent, vnode, subSelector, wrappingComponent) => {
-    const selectedSizzleNode = sizzleSelect(subSelector, vnode);
-    if (!selectedSizzleNode) {
-      return;
+    const selectedSizzleNodes = sizzleSelect(subSelector, vnode);
+    for (let i = 0; i < selectedSizzleNodes.length; i += 1) {
+      const element = createElement(matchedComponent, wrappingComponent, {}, [selectedSizzleNodes[i].vnode]);
+      spliceIntoParent(selectedSizzleNodes[i], element, 0, 1);
     }
-    const element = createElement(matchedComponent, wrappingComponent, {}, [selectedSizzleNode.vnode]);
-    spliceIntoParent(selectedSizzleNode, element, 0, 1);
   },
 };
 
