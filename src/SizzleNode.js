@@ -16,6 +16,7 @@ export default class SizzleNode {
     this.vnode = vnode;
     this.internalParentNode = parentNode;
     this.lazyChildNodes = undefined;
+    this.internalAttributes = {};
   }
 
   /**
@@ -61,6 +62,9 @@ export default class SizzleNode {
    * @returns {String}
    */
   getAttribute(attributeName) {
+    if (typeof this.internalAttributes[attributeName] !== 'undefined') {
+      return this.internalAttributes[attributeName];
+    }
     if (!this.vnode.data) {
       return undefined;
     }
@@ -72,6 +76,14 @@ export default class SizzleNode {
     }
 
     return undefined;
+  }
+
+  setAttribute (attributeName, value) {
+    this.internalAttributes[attributeName] = value;
+  }
+
+  removeAttribute (attributeName) {
+    this.internalAttributes[attributeName] = undefined;
   }
 
   /**
